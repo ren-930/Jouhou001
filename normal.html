@@ -206,20 +206,60 @@ button:hover{
 
   <h5>ヨコ</h5>
   <button onclick="toggle('q1')">Q1</button>
-  <div class="mondaibun" id="q1">ここにQ1</div>
+  <div class="mondaibun" id="q1">朋優学院の校長の名前は何か</div>
 
   <button onclick="toggle('q2')">Q2</button>
-  <div class="mondaibun" id="q2">ここにQ2</div>
+  <div class="mondaibun" id="q2">西園寺公望と交互に政権を担当した人の苗字は何か</div>
 
-  <h5>タテ</h5>
-  <button onclick="toggle('q3')">Q1</button>
-  <div class="mondaibun" id="q3">ここにQ3</div>
-
+<button onclick="toggle('q3')">Q3</button>
+  <div class="mondaibun" id="q3">アメリカに本社を置く世界最大級のスポーツ&フィットネスブランドは何か</div>
+  
   <button onclick="toggle('q4')">Q4</button>
-  <div class="mondaibun" id="q4">ここにQ4</div>
+  <div class="mondaibun" id="q4">ディズニーランドがある県は何県か</div>
+  
+  <button onclick="toggle('q5')">Q5</button>
+  <div class="mondaibun" id="q5">現代語のやはりを古文単語に直すと何になるか</div>
   
   <button onclick="toggle('q6')">Q6</button>
-  <div class="mondaibun" id="q6">ここにQ6</div>
+  <div class="mondaibun" id="q6">singを日本語に訳すとどうなるか</div>
+  
+  <button onclick="toggle('q7')">Q7</button>
+  <div class="mondaibun" id="q7">両端が節になり、基本振動や二倍振動などを行う、ギターにもついているものは</div>
+  
+  <button onclick="toggle('q8')">Q8</button>
+  <div class="mondaibun" id="q8">北大西洋条約機構の別名をなんというか</div>
+  
+  <h5>タテ</h5>
+  
+  <button onclick="toggle('q9')">Q1</button>
+  <div class="mondaibun" id="q9">物質が酸素と化合することをなんと言うか</div>
+  
+    <button onclick="toggle('q15')">Q4</button>
+  <div class="mondaibun" id="q15">エジプトとシリアがイスラエルに奇襲攻撃を仕掛けて始まった戦争を第四次〇〇戦争という</div>
+  
+  <button onclick="toggle('q10')">Q10</button>
+  <div class="mondaibun" id="q10">1991年に旧ソ連から独立した首都がキーウである国はどこか</div>
+  
+  <button onclick="toggle('q11')">Q11</button>
+  <div class="mondaibun" id="q11">ポーランド生まれでドイツ人の社会主義者の名前は〇〇〇＝ルクセンブルクである</div>
+  
+  <button onclick="toggle('q12')">Q12</button>
+  <div class="mondaibun" id="q12">カリブ海に浮かぶ最大の島国は何か</div>
+  
+  <button onclick="toggle('q13')">Q13</button>
+  <div class="mondaibun" id="q13">マグロを加工した食べ物の名前</div>
+  
+  <button onclick="toggle('q14')">Q14</button>
+  <div class="mondaibun" id="q14">液体や固体の中に空気が閉じ込められてできる泡をなんというか</div>
+  
+  
+  <button onclick="toggle('q16')">Q16</button>
+  <div class="mondaibun" id="q16">物質から酸素が奪われることをなんと言うか</div>
+  
+  <button onclick="toggle('q17')">Q17</button>
+  <div class="mondaibun" id="q17">shelfは日本語で何か</div>
+  
+  
   
 </div>
 
@@ -239,17 +279,21 @@ button:hover{
  */
 
 const cells = [
-  [{num:1,alpha:"A"},{},{num:2},{num:3},{},{}],
-  [{},{black:true},{num:4},{},{black:true},{}],
-  [{num:5},{num:6},{alpha:"B"},{},{num:7},{}],
-  [{black:true},{num:8},{},{black:true},{},{}],
-  [{num:9},{},{},{},{alpha:"C"},{}],
-];
+  [{num:1},{},{num:10,alpha:"B"},{},{num:11},{alpha:"C"},{num:12}],
+  [{},{black:true},{},{black:true},{},{black:true},{}],
+  [{num:2},{num:13},{},{black:true},{},{black:true},{}],
+  [{black:true},{num:3},{},{num:14},{black:true},{num:4},{}],
+  [{num:16},{black:true},{num:5},{alpha:"A"},{black:true},{},{black:true}],
+  [{},{black:true},{black:true},{num:6},{num:17},{alpha:"D"},{black:true}],
+  [{num:7},{},{black:true},{black:true},{num:8},{},{}],
+  [{},{black:true},{black:true},{black:true},{black:true},{},{black:true}]
+  ];
 
 const correctAnswer = {
-  A: "ぱ",
-  B: "ず",
-  C: "る",
+  A: "ほ",
+  B: "う",
+  C: "ゆ",
+  D: "う",
 };
 
 /*↑答え
@@ -418,13 +462,25 @@ document.addEventListener("keydown", e => {
 /*🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥*/
 
 /*増やしたタテ、ヨコのヒントの数だけ、q1,q2の名前を変えて増やす*/
-
-  var mondaibun = {
+var mondaibun = {
     q1: document.getElementById("q1"),
     q2: document.getElementById("q2"),
     q3: document.getElementById("q3"),
     q4: document.getElementById("q4"),
+    q5: document.getElementById("q5"),
     q6: document.getElementById("q6"),
+    q7: document.getElementById("q7"),
+    q8: document.getElementById("q8"),
+    q9: document.getElementById("q9"),
+    q10: document.getElementById("q10"),
+    q11: document.getElementById("q11"),
+    q12: document.getElementById("q12"),
+    q13: document.getElementById("q13"),
+    q14: document.getElementById("q14"),
+    q15: document.getElementById("q15"),
+    q16: document.getElementById("q16"),
+    q17: document.getElementById("q17"),
+    
   };
 
 /*🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥*/
