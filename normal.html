@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>クロスワード ふつう</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#fde68a,#fbcfe8);
+  padding:30px;
+}
+
+.container{
+  max-width:900px;
+  margin:0 auto;
+  background:#fffaf0;
+  border-radius:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+  padding:30px;
+}
+
+.header{
+  text-align:center;
+  font-size:32px;
+  margin-bottom:20px;
+  color:#fb7185;
+}
+
+/* ===== レイアウト ===== */
+
+.game-area{
+  display:flex;
+  flex-direction:column;
+  gap:30px;
+}
+
+/* ===== 盤面エリア ===== */
+
+.board-area{
+  background:#fff7ed;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:inset 0 0 0 4px #fde68a;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* グリッド */
+.grid{
+  display:grid;
+  gap:1px;
+  background:#aaa;
+}
+
+.cell{
+  position:relative;
+  width:48px;
+  height:48px;
+  background:white;
+}
+
+.cell.black{
+  background:black;
+}
+
+.cell input{
+  width:100%;
+  height:100%;
+  border:none;
+  text-align:center;
+  font-size:20px;
+}
+
+.num{
+  position:absolute;
+  top:2px;
+  left:2px;
+  font-size:10px;
+}
+
+.alpha{
+  position:absolute;
+  top:2px;
+  right:2px;
+  font-size:10px;
+  color:#0066cc;
+  font-weight:bold;
+}
+
+/* アンサー欄 */
+.answers{
+  display:flex;
+  gap:5px;
+  margin-top:20px;
+}
+
+.answer-box{
+  width:40px;
+  height:40px;
+  border:2px solid #444;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.answer-alpha{
+  position:absolute;
+  top:2px;
+  left:2px;
+  font-size:10px;
+}
+
+.answer-box.ok{
+  background:#c8f7c5;
+}
+
+.answer-box.ng{
+  background:#f7c5c5;
+}
+
+#check{
+  margin-top:15px;
+  padding:8px 20px;
+}
+
+/* ===== 問題文 ===== */
+
+.side-panel{
+  background:#fdf2f8;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:inset 0 0 0 4px #fbcfe8;
+}
+
+.mondaibun{
+  display:none;
+  margin:5px 0 10px 10px;
+  padding:8px;
+  background:white;
+  border-radius:8px;
+}
+
+button{
+  padding:6px 12px;
+  margin:5px 0;
+  border:none;
+  border-radius:8px;
+  background:#fb7185;
+  color:white;
+  cursor:pointer;
+}
+
+button:hover{
+  opacity:0.8;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="header">クロスワード＜ふつう＞</div>
+
+<div class="game-area">
+
+<!-- 盤面 -->
+<div class="board-area">
+  <div id="grid" class="grid"></div>
+  <div id="answers" class="answers"></div>
+  <button id="check">正誤判定</button>
+</div>
+
+
+
+<!--🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+ここから250行あたりまで変える！！！
+-->
+
+
+
+
+<!--ここから下が問題文
+コピペ＋toggle()の中身とidをq数字にする
+
+例：ヨコのQ6なら
+<h5>ヨコ</h5>のところに
+<button onclick="toggle('q6')">Q6</button>
+                         ↑  ↓  ↑（←⚠️ここ変えるの注意！！）
+<div class="mondaibun" id="q6">今年の干支の動物の頭文字</div>
+
+それと400行目あたりも変える
+-->
+
+<!-- 問題文 -->
+<div class="side-panel">
+  <h4>ー 問題文 ー</h4>
+
+  <h5>ヨコ</h5>
+  <button onclick="toggle('q1')">Q1</button>
+  <div class="mondaibun" id="q1">ここにQ1</div>
+
+  <button onclick="toggle('q2')">Q2</button>
+  <div class="mondaibun" id="q2">ここにQ2</div>
+
+  <h5>タテ</h5>
+  <button onclick="toggle('q3')">Q1</button>
+  <div class="mondaibun" id="q3">ここにQ3</div>
+
+  <button onclick="toggle('q4')">Q4</button>
+  <div class="mondaibun" id="q4">ここにQ4</div>
+  
+  <button onclick="toggle('q6')">Q6</button>
+  <div class="mondaibun" id="q6">ここにQ6</div>
+  
+</div>
+
+</div>
+
+<script>
+  
+
+/*マス目定義：
+ 黒マスにしたければ{black:true}
+ 左上に数字を付けたいなら{num:1}
+ 右上にアルファベットを付けたいなら{alpha:"A"}
+ 例：{num:1,alpha:"A"},{black:true},{num:2}
+ 
+ 横に伸ばしたい分だけ書く
+ 改行[]で縦の長さ
+ */
+
+const cells = [
+  [{num:1,alpha:"A"},{},{num:2},{num:3},{},{}],
+  [{},{black:true},{num:4},{},{black:true},{}],
+  [{num:5},{num:6},{alpha:"B"},{},{num:7},{}],
+  [{black:true},{num:8},{},{black:true},{},{}],
+  [{num:9},{},{},{},{alpha:"C"},{}],
+];
+
+const correctAnswer = {
+  A: "ぱ",
+  B: "ず",
+  C: "る",
+};
+
+/*↑答え
+Aマスの答えをA:"◯",で表す*/
+
+
+/*🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥*/
+
+
+
+
+
+
+/* ===== 生成 ===== */
+
+const rows = cells.length;
+const cols = cells[0].length;
+
+const grid = document.getElementById("grid");
+grid.style.gridTemplateColumns = `repeat(${cols}, 48px)`;
+
+const answerMap = {};
+const inputs = [];
+
+cells.forEach((row, r) => {
+  row.forEach((cell, c) => {
+    const div = document.createElement("div");
+    div.className = "cell";
+
+    if (cell.black) {
+      div.classList.add("black");
+      grid.appendChild(div);
+      return;
+    }
+
+    if (cell.num) {
+      const n = document.createElement("span");
+      n.className = "num";
+      n.textContent = cell.num;
+      div.appendChild(n);
+    }
+
+    if (cell.alpha) {
+      div.classList.add("answer-target");
+      div.dataset.alpha = cell.alpha;
+      
+      const a = document.createElement("span");
+      a.className = "alpha";
+      a.textContent = cell.alpha;
+      div.appendChild(a);
+    }
+
+    const input = document.createElement("input");
+    input.maxLength = 1;
+    input.dataset.row = r;
+    input.dataset.col = c;
+    
+   input.addEventListener("input", () => {
+    input.value = input.value.slice(0, 1);
+
+    if (!cell.alpha) return;
+
+    const box = answerMap[cell.alpha];
+    if (box) {
+    box.querySelector(".answer-value").textContent = input.value;
+  }
+});
+
+    div.appendChild(input);
+    grid.appendChild(div);
+  });
+});
+
+/*  アンサー欄  */
+const answersDiv = document.getElementById("answers");
+Object.keys(correctAnswer).forEach(k => {
+  const d = document.createElement("div");
+  d.className = "answer-box";
+  d.dataset.key = k;
+
+  const label = document.createElement("span");
+  label.className = "answer-alpha";
+  label.textContent = k;
+
+  const value = document.createElement("span");
+  value.className = "answer-value";
+
+  d.appendChild(label);
+  d.appendChild(value);
+
+  answerMap[k] = d;
+  answersDiv.appendChild(d);
+});
+
+/* ===== 正誤判定 ===== */
+document.getElementById("check").onclick = () => {
+
+  let allCorrect = true;
+
+  Object.entries(correctAnswer).forEach(([k, v]) => {
+    const box = answerMap[k];
+    const value = box.querySelector(".answer-value").textContent;
+
+    box.classList.remove("ok", "ng");
+
+    if (value === v) {
+      box.classList.add("ok");
+    } else {
+      box.classList.add("ng");
+      allCorrect = false;  
+    }
+  });
+
+  // 全部正解ならページ移動
+  if (allCorrect) {
+    setTimeout(() => {
+      location.href = "clear.html";
+    }, 1000);
+  }
+};
+
+
+
+
+
+  
+/* ===== 矢印キー移動 ===== */
+document.addEventListener("keydown", e => {
+  const active = document.activeElement;
+  if (active.tagName !== "INPUT") return;
+
+  let r = Number(active.dataset.row);
+  let c = Number(active.dataset.col);
+
+  let dr = 0, dc = 0;
+
+  switch (e.key) {
+    case "ArrowUp":    dr = -1; break;
+    case "ArrowDown":  dr = 1;  break;
+    case "ArrowLeft":  dc = -1; break;
+    case "ArrowRight": dc = 1;  break;
+    default: return;
+  }
+
+  e.preventDefault();
+
+  let nr = r;
+  let nc = c;
+
+  while (true) {
+    nr += dr;
+    nc += dc;
+
+    if (nr < 0 || nc < 0 || nr >= rows || nc >= cols) return;
+
+    if (cells[nr][nc].black) continue;
+
+    const next = document.querySelector(
+      `input[data-row="${nr}"][data-col="${nc}"]`
+    );
+    if (next) next.focus();
+    return;
+  }
+});
+
+/*🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥*/
+
+/*増やしたタテ、ヨコのヒントの数だけ、q1,q2の名前を変えて増やす*/
+
+  var mondaibun = {
+    q1: document.getElementById("q1"),
+    q2: document.getElementById("q2"),
+    q3: document.getElementById("q3"),
+    q4: document.getElementById("q4"),
+    q6: document.getElementById("q6"),
+  };
+
+/*🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥*/
+
+  // 表示する
+  function hyouji(el) {
+    el.style.display = "block";
+  }
+
+  // 消す
+  function kieru(el) {
+    el.style.display = "none";
+  }
+
+  // ボタンを押したとき
+  function toggle(id) {
+
+    var target = mondaibun[id];
+
+    // 三項演算子
+    target.style.display === "block"
+      ? kieru(target)
+      : hyouji(target);
+  }
+
+
+</script>
+</body>
+</html>
