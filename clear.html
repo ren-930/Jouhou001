@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>クリア！</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#fde68a,#fbcfe8);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* 中央ボックス */
+.clear-box{
+  background:#fffaf0;
+  padding:60px 80px;
+  border-radius:30px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  text-align:center;
+  animation:pop 0.6s ease;
+  position:relative;
+  z-index:2;
+}
+
+h1{
+  font-size:48px;
+  color:#fb7185;
+  margin-bottom:20px;
+}
+
+p{
+  font-size:18px;
+  margin-bottom:30px;
+  color:#555;
+}
+
+/* ボタン */
+button{
+  padding:10px 25px;
+  border:none;
+  border-radius:12px;
+  background:#fb7185;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{
+  transform:scale(1.05);
+  opacity:0.9;
+}
+
+/* ふわっと出現 */
+@keyframes pop{
+  0%{
+    transform:scale(0.5);
+    opacity:0;
+  }
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+/* キラキラ */
+.sparkle{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:white;
+  border-radius:50%;
+  animation:float 3s linear infinite;
+  opacity:0.8;
+}
+
+@keyframes float{
+  0%{
+    transform:translateY(0);
+    opacity:0;
+  }
+  30%{
+    opacity:1;
+  }
+  100%{
+    transform:translateY(-200px);
+    opacity:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="clear-box">
+  <h1>🎉 CLEAR! 🎉</h1>
+  <p>クロスワード完成！<br>おめでとうございます。</p>
+  <button onclick="location.href='title.html'">
+    タイトルに戻る
+  </button>
+</div>
+
+<script>
+
+/* キラキラ生成 */
+for(let i=0;i<20;i++){
+  const s=document.createElement("div");
+  s.className="sparkle";
+  s.style.left=Math.random()*100+"vw";
+  s.style.top=(Math.random()*100+50)+"vh";
+  s.style.animationDelay=Math.random()*3+"s";
+  s.style.animationDuration=(2+Math.random()*3)+"s";
+  document.body.appendChild(s);
+}
+
+</script>
+
+</body>
+</html>
